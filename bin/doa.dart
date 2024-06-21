@@ -11,13 +11,10 @@ const generatingMessage = 'Generating...';
 Future<void> main() async {
   final logger = Logger();
   const variableName = 'OPENAI_API_KEY';
-  final apiKey = Platform.environment[variableName];
-  if (apiKey == null) {
-    logger.alert(
-      'Your API key must be set in the \$$variableName environment variable.',
-    );
-    exit(127);
-  }
+  final apiKey = Platform.environment[variableName] ??
+      logger.prompt(
+        'API key (can be set with the $variableName environment variable)',
+      );
   final messages = <OpenAIChatCompletionChoiceMessageModel>[];
   OpenAI.apiKey = apiKey;
   final api = OpenAI.instance;
