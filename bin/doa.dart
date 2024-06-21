@@ -11,7 +11,7 @@ Future<void> main() async {
   final messages = <OpenAIChatCompletionChoiceMessageModel>[];
   OpenAI.apiKey = apiKey;
   final api = OpenAI.instance;
-  const model = 'gpt-4o';
+  var model = 'gpt-4o';
   var running = true;
   final parser = CommandParser(
     [
@@ -45,11 +45,27 @@ Future<void> main() async {
           }
         },
       ),
+      CommandParserCommand(
+        command: ':m',
+        description: 'Change the used model.',
+        invoke: (final parser) async {
+          final progress = logger.progress('Loading models...');
+          final models = await api.model.list();
+          progress.complete();
+          model = logger.chooseOne(
+            'Select model:',
+            choices:
+                models.map((final modelFromApi) => modelFromApi.id).toList(),
+            defaultValue: model,
+          );
+          logger.info('Using model $model.');
+        },
+      ),
     ],
   );
   while (running) {
     final string = logger.prompt('GPT>');
-    if (!parser.handleCommand(string)) {
+    if (!(await parser.handleCommand(string))) {
       logger.info('Generating...');
       messages.add(
         OpenAIChatCompletionChoiceMessageModel(

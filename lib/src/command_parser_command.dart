@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'command_parser.dart';
 
 /// A command in a [CommandParser].
@@ -16,5 +18,5 @@ class CommandParserCommand {
   final String description;
 
   /// The function to run to use this command.
-  final void Function(CommandParser parser) invoke;
+  final FutureOr<void> Function(CommandParser parser) invoke;
 }

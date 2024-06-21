@@ -12,13 +12,13 @@ class CommandParser {
   ///
   /// If [command] is handled by this parser, `true` is returned. Otherwise,
   /// `false` will be returned.
-  bool handleCommand(final String command) {
+  Future<bool> handleCommand(final String command) async {
     if (command.contains(' ')) {
       return false;
     }
     for (final handler in commands) {
       if (handler.command == command) {
-        handler.invoke(this);
+        await handler.invoke(this);
         return true;
       }
     }
