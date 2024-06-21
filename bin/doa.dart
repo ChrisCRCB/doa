@@ -71,7 +71,7 @@ Future<void> main() async {
     ],
   );
   while (running) {
-    final string = logger.prompt('GPT>');
+    final string = logger.prompt('$model>');
     if (!(await parser.handleCommand(string))) {
       stdout.write(generatingMessage);
       messages.add(
