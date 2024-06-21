@@ -1,0 +1,16 @@
+name: doa
+description: A sample command-line application.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.5.0-180.3.beta
+
+# Add regular dependencies here.
+dependencies:
+  dart_openai: ^5.1.0
+  mason_logger: ^0.2.15
+
+dev_dependencies:
+  lints: ^4.0.0
+  test: ^1.24.0
