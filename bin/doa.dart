@@ -4,10 +4,20 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:doa/doa.dart';
 import 'package:mason_logger/mason_logger.dart';
 
+/// The message to show when generating responses.
+const generatingMessage = 'Generating...';
+
 /// Run the program.
 Future<void> main() async {
-  final apiKey = Platform.environment['OPENAI_API_KEY'] ?? '';
   final logger = Logger();
+  const variableName = 'OPENAI_API_KEY';
+  final apiKey = Platform.environment[variableName];
+  if (apiKey == null) {
+    logger.alert(
+      'Your API key must be set in the \$$variableName environment variable.',
+    );
+    exit(127);
+  }
   final messages = <OpenAIChatCompletionChoiceMessageModel>[];
   OpenAI.apiKey = apiKey;
   final api = OpenAI.instance;
@@ -66,7 +76,7 @@ Future<void> main() async {
   while (running) {
     final string = logger.prompt('GPT>');
     if (!(await parser.handleCommand(string))) {
-      logger.info('Generating...');
+      stdout.write(generatingMessage);
       messages.add(
         OpenAIChatCompletionChoiceMessageModel(
           role: OpenAIChatMessageRole.user,
@@ -84,6 +94,9 @@ Future<void> main() async {
               .where((final maybeText) => maybeText != null)
               .toList() ??
           [];
+      for (var i = 0; i < generatingMessage.length; i++) {
+        stdout.write('\b \b');
+      }
       if (texts.isEmpty) {
         logger.warn('Empty message.');
       } else {
